@@ -15,7 +15,7 @@ public class InvoiceGenerator {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.performances()) {
-            Play play = plays.get(performance.playId());
+            Play play = playFor(plays, performance);
             int thisAmount = amountFor(performance, play);
 
             // 포인트를 적립한다.
@@ -38,6 +38,10 @@ public class InvoiceGenerator {
         result.append(String.format("적립 포인트: %d점\n", volumeCredits));
 
         return result.toString();
+    }
+
+    private Play playFor(Map<String, Play> plays, Performance performance) {
+        return plays.get(performance.playId());
     }
 
     private int amountFor(Performance performance, Play play) {
