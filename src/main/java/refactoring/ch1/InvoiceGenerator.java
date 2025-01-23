@@ -10,12 +10,9 @@ public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
         int totalAmount = 0;
-        int volumeCredits = 0;
         StringBuilder result = new StringBuilder("청구 내역 (고객명: " + invoice.customer() + ")\n");
 
         for (Performance performance : invoice.performances()) {
-            volumeCredits += volumeCreditsFor(plays, performance);
-
             // 청구 내역을 출력한다.
             result.append(String.format(" %s: %s (%d석)\n",
                     playFor(plays, performance).name(),
@@ -26,9 +23,17 @@ public class InvoiceGenerator {
         }
 
         result.append(String.format("총액: %s\n", usd(totalAmount)));
-        result.append(String.format("적립 포인트: %d점\n", volumeCredits));
+        result.append(String.format("적립 포인트: %d점\n", totalVolumeCredits(invoice, plays)));
 
         return result.toString();
+    }
+
+    private int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
+        int volumeCredits = 0;
+        for (Performance performance : invoice.performances()) {
+            volumeCredits += volumeCreditsFor(plays, performance);
+        }
+        return volumeCredits;
     }
 
     private String usd(int number) {
