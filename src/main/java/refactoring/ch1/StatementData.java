@@ -1,4 +1,4 @@
 package refactoring.ch1;
 
-public class StatementData {
+public record StatementData(String customer) {
 }

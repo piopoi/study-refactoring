@@ -9,12 +9,12 @@ import java.util.Map;
 public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
-        StatementData statementData = new StatementData();
+        StatementData statementData = new StatementData(invoice.customer());
         return renderPlainText(statementData, invoice, plays);
     }
 
-    public String renderPlainText(StatementData statementData, Invoice invoice, Map<String, Play> plays) {
-        StringBuilder result = new StringBuilder("청구 내역 (고객명: " + invoice.customer() + ")\n");
+    private String renderPlainText(StatementData statementData, Invoice invoice, Map<String, Play> plays) {
+        StringBuilder result = new StringBuilder("청구 내역 (고객명: " + statementData.customer() + ")\n");
         for (Performance performance : invoice.performances()) {
             result.append(String.format(" %s: %s (%d석)\n",
                     playFor(plays, performance).name(),
