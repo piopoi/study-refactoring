@@ -15,28 +15,30 @@ public class InvoiceGenerator {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.performances()) {
-            int thisAmount = amountFor(plays, performance);
-
-            // 포인트를 적립한다.
-            volumeCredits += Math.max(performance.audience() - 30, 0);
-            // 희극 관객 5명마다 추가 포인트를 제공한다.
-            if (COMEDY == playFor(plays, performance).type()) {
-                volumeCredits += (int) Math.floor(performance.audience() / 5.0);
-            }
+            volumeCredits += volumeCreditsFor(plays, performance);
 
             // 청구 내역을 출력한다.
             result.append(String.format(" %s: %s (%d석)\n",
                     playFor(plays, performance).name(),
-                    format.format(thisAmount / 100),
+                    format.format(amountFor(plays, performance) / 100),
                     performance.audience()));
 
-            totalAmount += thisAmount;
+            totalAmount += amountFor(plays, performance);
         }
 
         result.append(String.format("총액: %s\n", format.format(totalAmount / 100)));
         result.append(String.format("적립 포인트: %d점\n", volumeCredits));
 
         return result.toString();
+    }
+
+    private int volumeCreditsFor(Map<String, Play> plays, Performance performance) {
+        int volumeCredits = 0;
+        volumeCredits += Math.max(performance.audience() - 30, 0);
+        if (COMEDY == playFor(plays, performance).type()) {
+            volumeCredits += (int) Math.floor(performance.audience() / 5.0);
+        }
+        return volumeCredits;
     }
 
     private Play playFor(Map<String, Play> plays, Performance performance) {
