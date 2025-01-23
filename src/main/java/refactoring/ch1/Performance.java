@@ -4,17 +4,13 @@ public class Performance {
 
     private final String playId;
     private final int audience;
-    private final Play play;
-
-    public Performance(String playId, int audience, Play play) {
-        this.playId = playId;
-        this.audience = audience;
-        this.play = play;
-    }
+    private Play play;
+    private int amount;
 
     public Performance(String playId, int audience) {
         this.playId = playId;
         this.audience = audience;
+        this.amount = 0;
         this.play = null;
     }
 
@@ -28,5 +24,17 @@ public class Performance {
 
     public Play getPlay() {
         return play;
+    }
+
+    public void setPlay(Play play) {
+        this.play = play;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }

@@ -22,7 +22,10 @@ public class InvoiceGenerator {
     }
 
     private Performance enrichPerformance(Performance performance, Map<String, Play> plays) {
-        return new Performance(performance.getPlayId(), performance.getAudience(), playFor(plays, performance));
+        Performance result = new Performance(performance.getPlayId(), performance.getAudience());
+        result.setPlay(playFor(plays, result));
+        result.setAmount(amountFor(result));
+        return result;
     }
 
     private String renderPlainText(StatementData data, Map<String, Play> plays) {
@@ -30,7 +33,7 @@ public class InvoiceGenerator {
         for (Performance performance : data.performances()) {
             result.append(String.format(" %s: %s (%d석)\n",
                     performance.getPlay().name(),
-                    usd(amountFor(performance)),
+                    usd(performance.getAmount()),
                     performance.getAudience()));
         }
         result.append(String.format("총액: %s\n", usd(totalAmount(data.performances()))));
@@ -41,7 +44,7 @@ public class InvoiceGenerator {
     private int totalAmount(List<Performance> performances) {
         int result = 0;
         for (Performance performance : performances) {
-            result += amountFor(performance);
+            result += performance.getAmount();
         }
         return result;
     }
