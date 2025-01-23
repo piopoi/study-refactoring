@@ -9,9 +9,12 @@ import java.util.Map;
 public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
+        return renderPlainText(invoice, plays);
+    }
+
+    public String renderPlainText(Invoice invoice, Map<String, Play> plays) {
         StringBuilder result = new StringBuilder("청구 내역 (고객명: " + invoice.customer() + ")\n");
         for (Performance performance : invoice.performances()) {
-            // 청구 내역을 출력한다.
             result.append(String.format(" %s: %s (%d석)\n",
                     playFor(plays, performance).name(),
                     usd(amountFor(plays, performance)),
