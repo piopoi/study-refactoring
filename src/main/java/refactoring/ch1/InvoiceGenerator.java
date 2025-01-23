@@ -6,12 +6,23 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
-        StatementData statementData = new StatementData(invoice.customer(), invoice.performances());
+        StatementData statementData = new StatementData(invoice.customer(), enrichPerformances(invoice));
         return renderPlainText(statementData, plays);
+    }
+
+    private List<Performance> enrichPerformances(Invoice invoice) {
+        return invoice.performances().stream()
+                .map(this::enrichPerformance)
+                .collect(Collectors.toList());
+    }
+
+    private Performance enrichPerformance(Performance performance) {
+        return new Performance(performance.playId(), performance.audience());
     }
 
     private String renderPlainText(StatementData data, Map<String, Play> plays) {
