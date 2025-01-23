@@ -25,6 +25,7 @@ public class InvoiceGenerator {
         Performance result = new Performance(performance.getPlayId(), performance.getAudience());
         result.setPlay(playFor(plays, result));
         result.setAmount(amountFor(result));
+        result.setVolumeCredits(volumeCreditsFor(result));
         return result;
     }
 
@@ -52,7 +53,7 @@ public class InvoiceGenerator {
     private int totalVolumeCredits(List<Performance> performances) {
         int result = 0;
         for (Performance performance : performances) {
-            result += volumeCreditsFor(performance);
+            result += performance.getVolumeCredits();
         }
         return result;
     }
