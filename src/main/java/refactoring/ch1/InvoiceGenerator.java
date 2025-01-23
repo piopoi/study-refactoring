@@ -12,7 +12,6 @@ public class InvoiceGenerator {
         int totalAmount = 0;
         int volumeCredits = 0;
         StringBuilder result = new StringBuilder("청구 내역 (고객명: " + invoice.customer() + ")\n");
-        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.performances()) {
             volumeCredits += volumeCreditsFor(plays, performance);
@@ -20,16 +19,21 @@ public class InvoiceGenerator {
             // 청구 내역을 출력한다.
             result.append(String.format(" %s: %s (%d석)\n",
                     playFor(plays, performance).name(),
-                    format.format(amountFor(plays, performance) / 100),
+                    usd(amountFor(plays, performance)),
                     performance.audience()));
 
             totalAmount += amountFor(plays, performance);
         }
 
-        result.append(String.format("총액: %s\n", format.format(totalAmount / 100)));
+        result.append(String.format("총액: %s\n", usd(totalAmount)));
         result.append(String.format("적립 포인트: %d점\n", volumeCredits));
 
         return result.toString();
+    }
+
+    private String usd(int number) {
+        NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
+        return format.format(number / 100);
     }
 
     private int volumeCreditsFor(Map<String, Play> plays, Performance performance) {
