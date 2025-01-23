@@ -9,31 +9,33 @@ import java.util.Map;
 public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
-        int totalAmount = 0;
         StringBuilder result = new StringBuilder("청구 내역 (고객명: " + invoice.customer() + ")\n");
-
         for (Performance performance : invoice.performances()) {
             // 청구 내역을 출력한다.
             result.append(String.format(" %s: %s (%d석)\n",
                     playFor(plays, performance).name(),
                     usd(amountFor(plays, performance)),
                     performance.audience()));
-
-            totalAmount += amountFor(plays, performance);
         }
-
-        result.append(String.format("총액: %s\n", usd(totalAmount)));
+        result.append(String.format("총액: %s\n", usd(totalAmount(invoice, plays))));
         result.append(String.format("적립 포인트: %d점\n", totalVolumeCredits(invoice, plays)));
-
         return result.toString();
     }
 
-    private int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
-        int volumeCredits = 0;
+    private int totalAmount(Invoice invoice, Map<String, Play> plays) {
+        int result = 0;
         for (Performance performance : invoice.performances()) {
-            volumeCredits += volumeCreditsFor(plays, performance);
+            result += amountFor(plays, performance);
         }
-        return volumeCredits;
+        return result;
+    }
+
+    private int totalVolumeCredits(Invoice invoice, Map<String, Play> plays) {
+        int result = 0;
+        for (Performance performance : invoice.performances()) {
+            result += volumeCreditsFor(plays, performance);
+        }
+        return result;
     }
 
     private String usd(int number) {
@@ -42,12 +44,12 @@ public class InvoiceGenerator {
     }
 
     private int volumeCreditsFor(Map<String, Play> plays, Performance performance) {
-        int volumeCredits = 0;
-        volumeCredits += Math.max(performance.audience() - 30, 0);
+        int result = 0;
+        result += Math.max(performance.audience() - 30, 0);
         if (COMEDY == playFor(plays, performance).type()) {
-            volumeCredits += (int) Math.floor(performance.audience() / 5.0);
+            result += (int) Math.floor(performance.audience() / 5.0);
         }
-        return volumeCredits;
+        return result;
     }
 
     private Play playFor(Map<String, Play> plays, Performance performance) {
