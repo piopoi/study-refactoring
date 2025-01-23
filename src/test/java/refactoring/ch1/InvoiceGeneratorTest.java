@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
-class StatementTest {
+class InvoiceGeneratorTest {
 
     @Test
     void statement() {
         //given
-        Statement statement = new Statement();
+        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
 
         List<Performance> performances = new ArrayList<>();
         performances.add(new Performance("hamlet", 55));
@@ -29,7 +29,7 @@ class StatementTest {
         plays.put("othello", new Play("Othello", TRAGEDY));
 
         //when
-        String actual = statement.statement(invoice, plays);
+        String actual = invoiceGenerator.statement(invoice, plays);
 
         //then
         String expected = """
