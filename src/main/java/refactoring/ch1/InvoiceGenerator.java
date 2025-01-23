@@ -15,19 +15,18 @@ public class InvoiceGenerator {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.performances()) {
-            Play play = playFor(plays, performance);
-            int thisAmount = amountFor(performance, play);
+            int thisAmount = amountFor(plays, performance);
 
             // 포인트를 적립한다.
             volumeCredits += Math.max(performance.audience() - 30, 0);
             // 희극 관객 5명마다 추가 포인트를 제공한다.
-            if (COMEDY == play.type()) {
+            if (COMEDY == playFor(plays, performance).type()) {
                 volumeCredits += (int) Math.floor(performance.audience() / 5.0);
             }
 
             // 청구 내역을 출력한다.
             result.append(String.format(" %s: %s (%d석)\n",
-                    play.name(),
+                    playFor(plays, performance).name(),
                     format.format(thisAmount / 100),
                     performance.audience()));
 
@@ -44,9 +43,9 @@ public class InvoiceGenerator {
         return plays.get(performance.playId());
     }
 
-    private int amountFor(Performance performance, Play play) {
+    private int amountFor(Map<String, Play> plays, Performance performance) {
         int result;
-        switch (play.type()) {
+        switch (playFor(plays, performance).type()) {
             case TRAGEDY: // 비극
                 result = 40000;
                 if (performance.audience() > 30) {
@@ -61,7 +60,7 @@ public class InvoiceGenerator {
                 result += 300 * performance.audience();
                 break;
             default:
-                throw new IllegalArgumentException("알 수 없는 장르: " + play.type().name());
+                throw new IllegalArgumentException("알 수 없는 장르: " + playFor(plays, performance).type().name());
         }
         return result;
     }
