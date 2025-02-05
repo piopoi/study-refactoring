@@ -11,10 +11,14 @@ import java.util.stream.Collectors;
 public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
+        return renderPlainText(createStatementData(invoice, plays));
+    }
+
+    private StatementData createStatementData(Invoice invoice, Map<String, Play> plays) {
         StatementData statementData = new StatementData(invoice.customer(), enrichPerformances(invoice, plays));
         statementData.setTotalAmount(totalAmount(statementData));
         statementData.setTotalVolumeCredits(totalVolumeCredits(statementData));
-        return renderPlainText(statementData);
+        return statementData;
     }
 
     private List<Performance> enrichPerformances(Invoice invoice, Map<String, Play> plays) {
