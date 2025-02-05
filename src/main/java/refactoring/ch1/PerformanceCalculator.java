@@ -12,7 +12,9 @@ public abstract class PerformanceCalculator {
         this.play = play;
     }
 
-    public abstract int amount();
+    public int amount() {
+        throw new IllegalArgumentException("알 수 없는 장르: " + performance.getPlay().type().name());
+    }
 
     public int volumeCredits() {
         int result = 0;
