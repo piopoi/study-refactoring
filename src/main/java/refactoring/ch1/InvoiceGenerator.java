@@ -56,19 +56,19 @@ public class InvoiceGenerator {
 
     private String renderHtml(StatementData data) {
         StringBuilder result = new StringBuilder();
-        result.append("<h1>청구 내역 (고객명: " + data.getCustomer() + ")</h1>\\n");
-        result.append("<table>\\n");
+        result.append("<h1>청구 내역 (고객명: " + data.getCustomer() + ")</h1>\n");
+        result.append("<table>\n");
         result.append(" <tr><th>연극</th><th>좌석 수</th><th>금액</th></tr>");
         for (Performance performance : data.getPerformances()) {
-            result.append(" <tr>\\n");
-            result.append("  <td>" + performance.getPlay().name() + "</td>\\n");
-            result.append("  <td>(" + performance.getAudience() + "석)</td>\\n");
-            result.append("  <td>" + usd(performance.getAmount()) + "</td>\\n");
-            result.append(" </tr>\\n");
+            result.append(" <tr>\n");
+            result.append("  <td>" + performance.getPlay().name() + "</td>\n");
+            result.append("  <td>(" + performance.getAudience() + "석)</td>\n");
+            result.append("  <td>" + usd(performance.getAmount()) + "</td>\n");
+            result.append(" </tr>\n");
         }
-        result.append("</table>\\n");
-        result.append("<p>총액: <em>" + usd(totalAmount(data)) + "</em></p>\\n");
-        result.append("<p>적립 포인트: <em>" + totalVolumeCredits(data) + "}</em>점</p>\\n");
+        result.append("</table>\n");
+        result.append("<p>총액: <em>" + usd(totalAmount(data)) + "</em></p>\n");
+        result.append("<p>적립 포인트: <em>" + totalVolumeCredits(data) + "}</em>점</p>\n");
         return result.toString();
     }
 
