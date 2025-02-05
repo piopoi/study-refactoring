@@ -14,33 +14,6 @@ public class InvoiceGenerator {
         return renderPlainText(createStatementData(invoice, plays));
     }
 
-    public String htmlStatement(Invoice invoice, Map<String, Play> plays) {
-        return renderHtml(createStatementData(invoice, plays));
-    }
-
-    private StatementData createStatementData(Invoice invoice, Map<String, Play> plays) {
-        StatementData statementData = new StatementData();
-        statementData.setCustomer(invoice.customer());
-        statementData.setPerformances(enrichPerformances(invoice, plays));
-        statementData.setTotalAmount(totalAmount(statementData));
-        statementData.setTotalVolumeCredits(totalVolumeCredits(statementData));
-        return statementData;
-    }
-
-    private List<Performance> enrichPerformances(Invoice invoice, Map<String, Play> plays) {
-        return invoice.performances().stream()
-                .map(performance -> enrichPerformance(performance, plays))
-                .collect(Collectors.toList());
-    }
-
-    private Performance enrichPerformance(Performance performance, Map<String, Play> plays) {
-        Performance result = new Performance(performance.getPlayId(), performance.getAudience());
-        result.setPlay(playFor(plays, result));
-        result.setAmount(amountFor(result));
-        result.setVolumeCredits(volumeCreditsFor(result));
-        return result;
-    }
-
     private String renderPlainText(StatementData data) {
         StringBuilder result = new StringBuilder("청구 내역 (고객명: " + data.getCustomer() + ")\n");
         for (Performance performance : data.getPerformances()) {
@@ -52,6 +25,10 @@ public class InvoiceGenerator {
         result.append(String.format("총액: %s\n", usd(totalAmount(data))));
         result.append(String.format("적립 포인트: %d점\n", totalVolumeCredits(data)));
         return result.toString();
+    }
+
+    public String htmlStatement(Invoice invoice, Map<String, Play> plays) {
+        return renderHtml(createStatementData(invoice, plays));
     }
 
     private String renderHtml(StatementData data) {
@@ -72,10 +49,34 @@ public class InvoiceGenerator {
         return result.toString();
     }
 
+    private StatementData createStatementData(Invoice invoice, Map<String, Play> plays) {
+        StatementData statementData = new StatementData();
+        statementData.setCustomer(invoice.customer());
+        statementData.setPerformances(enrichPerformances(invoice, plays));
+        statementData.setTotalAmount(totalAmount(statementData));
+        statementData.setTotalVolumeCredits(totalVolumeCredits(statementData));
+        return statementData;
+    }
+
+    private List<Performance> enrichPerformances(Invoice invoice, Map<String, Play> plays) {
+        return invoice.performances().stream()
+                .map(performance -> enrichPerformance(performance, plays))
+                .collect(Collectors.toList());
+    }
+
     private int totalAmount(StatementData data) {
         return data.getPerformances().stream()
                 .mapToInt(Performance::getAmount)
                 .sum();
+    }
+
+    private Performance enrichPerformance(Performance performance, Map<String, Play> plays) {
+        PerformanceCalculator calculator = new PerformanceCalculator(performance, playFor(plays, performance));
+        Performance result = new Performance(performance.getPlayId(), performance.getAudience());
+        result.setPlay(calculator.getPlay());
+        result.setAmount(calculator.amount());
+        result.setVolumeCredits(volumeCreditsFor(result));
+        return result;
     }
 
     private int totalVolumeCredits(StatementData data) {
@@ -100,27 +101,5 @@ public class InvoiceGenerator {
 
     private Play playFor(Map<String, Play> plays, Performance performance) {
         return plays.get(performance.getPlayId());
-    }
-
-    private int amountFor(Performance performance) {
-        int result;
-        switch (performance.getPlay().type()) {
-            case TRAGEDY: // 비극
-                result = 40000;
-                if (performance.getAudience() > 30) {
-                    result += 1000 * (performance.getAudience() - 30);
-                }
-                break;
-            case COMEDY: // 희극
-                result = 30000;
-                if (performance.getAudience() > 20) {
-                    result += 10000 + 500 * (performance.getAudience() - 20);
-                }
-                result += 300 * performance.getAudience();
-                break;
-            default:
-                throw new IllegalArgumentException("알 수 없는 장르: " + performance.getPlay().type().name());
-        }
-        return result;
     }
 }
