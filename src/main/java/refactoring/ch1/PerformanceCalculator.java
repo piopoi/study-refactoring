@@ -2,7 +2,7 @@ package refactoring.ch1;
 
 import static refactoring.ch1.PlayType.COMEDY;
 
-public class PerformanceCalculator {
+public abstract class PerformanceCalculator {
 
     private Performance performance;
     private Play play;
@@ -12,27 +12,7 @@ public class PerformanceCalculator {
         this.play = play;
     }
 
-    public int amount() {
-        int result;
-        switch (this.play.type()) {
-            case TRAGEDY: // 비극
-                result = 40000;
-                if (performance.getAudience() > 30) {
-                    result += 1000 * (performance.getAudience() - 30);
-                }
-                break;
-            case COMEDY: // 희극
-                result = 30000;
-                if (performance.getAudience() > 20) {
-                    result += 10000 + 500 * (performance.getAudience() - 20);
-                }
-                result += 300 * performance.getAudience();
-                break;
-            default:
-                throw new IllegalArgumentException("알 수 없는 장르: " + performance.getPlay().type().name());
-        }
-        return result;
-    }
+    public abstract int amount();
 
     public int volumeCredits() {
         int result = 0;
