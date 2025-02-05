@@ -75,7 +75,7 @@ public class InvoiceGenerator {
         Performance result = new Performance(performance.getPlayId(), performance.getAudience());
         result.setPlay(calculator.getPlay());
         result.setAmount(calculator.amount());
-        result.setVolumeCredits(volumeCreditsFor(result));
+        result.setVolumeCredits(calculator.volumeCredits());
         return result;
     }
 
@@ -88,15 +88,6 @@ public class InvoiceGenerator {
     private String usd(int number) {
         NumberFormat format = NumberFormat.getCurrencyInstance(Locale.US);
         return format.format(number / 100);
-    }
-
-    private int volumeCreditsFor(Performance performance) {
-        int result = 0;
-        result += Math.max(performance.getAudience() - 30, 0);
-        if (COMEDY == performance.getPlay().type()) {
-            result += (int) Math.floor(performance.getAudience() / 5.0);
-        }
-        return result;
     }
 
     private Play playFor(Map<String, Play> plays, Performance performance) {

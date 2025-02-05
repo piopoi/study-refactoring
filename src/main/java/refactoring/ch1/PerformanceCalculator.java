@@ -1,5 +1,7 @@
 package refactoring.ch1;
 
+import static refactoring.ch1.PlayType.COMEDY;
+
 public class PerformanceCalculator {
 
     private Performance performance;
@@ -28,6 +30,15 @@ public class PerformanceCalculator {
                 break;
             default:
                 throw new IllegalArgumentException("알 수 없는 장르: " + performance.getPlay().type().name());
+        }
+        return result;
+    }
+
+    public int volumeCredits() {
+        int result = 0;
+        result += Math.max(performance.getAudience() - 30, 0);
+        if (COMEDY == this.play.type()) {
+            result += (int) Math.floor(performance.getAudience() / 5.0);
         }
         return result;
     }
