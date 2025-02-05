@@ -1,7 +1,5 @@
 package refactoring.ch1;
 
-import static refactoring.ch1.PlayType.*;
-
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
