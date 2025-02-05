@@ -15,7 +15,9 @@ public class InvoiceGenerator {
     }
 
     private StatementData createStatementData(Invoice invoice, Map<String, Play> plays) {
-        StatementData statementData = new StatementData(invoice.customer(), enrichPerformances(invoice, plays));
+        StatementData statementData = new StatementData();
+        statementData.setCustomer(invoice.customer());
+        statementData.setPerformances(enrichPerformances(invoice, plays));
         statementData.setTotalAmount(totalAmount(statementData));
         statementData.setTotalVolumeCredits(totalVolumeCredits(statementData));
         return statementData;
