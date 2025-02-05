@@ -69,12 +69,16 @@ public class InvoiceGenerator {
     }
 
     private Performance enrichPerformance(Performance performance, Map<String, Play> plays) {
-        PerformanceCalculator calculator = new PerformanceCalculator(performance, playFor(plays, performance));
+        PerformanceCalculator calculator = createPerformanceCalculator(performance, plays);
         Performance result = new Performance(performance.getPlayId(), performance.getAudience());
         result.setPlay(calculator.getPlay());
         result.setAmount(calculator.amount());
         result.setVolumeCredits(calculator.volumeCredits());
         return result;
+    }
+
+    private PerformanceCalculator createPerformanceCalculator(Performance performance, Map<String, Play> plays) {
+        return new PerformanceCalculator(performance, playFor(plays, performance));
     }
 
     private int totalVolumeCredits(StatementData data) {
