@@ -12,7 +12,9 @@ public class InvoiceGenerator {
 
     public String statement(Invoice invoice, Map<String, Play> plays) {
         StatementData statementData = new StatementData(invoice.customer(), enrichPerformances(invoice, plays));
-        return renderPlainText(statementData, plays);
+        statementData.setTotalAmount(totalAmount(statementData));
+        statementData.setTotalVolumeCredits(totalVolumeCredits(statementData));
+        return renderPlainText(statementData);
     }
 
     private List<Performance> enrichPerformances(Invoice invoice, Map<String, Play> plays) {
@@ -29,33 +31,29 @@ public class InvoiceGenerator {
         return result;
     }
 
-    private String renderPlainText(StatementData data, Map<String, Play> plays) {
-        StringBuilder result = new StringBuilder("청구 내역 (고객명: " + data.customer() + ")\n");
-        for (Performance performance : data.performances()) {
+    private String renderPlainText(StatementData data) {
+        StringBuilder result = new StringBuilder("청구 내역 (고객명: " + data.getCustomer() + ")\n");
+        for (Performance performance : data.getPerformances()) {
             result.append(String.format(" %s: %s (%d석)\n",
                     performance.getPlay().name(),
                     usd(performance.getAmount()),
                     performance.getAudience()));
         }
-        result.append(String.format("총액: %s\n", usd(totalAmount(data.performances()))));
-        result.append(String.format("적립 포인트: %d점\n", totalVolumeCredits(data.performances())));
+        result.append(String.format("총액: %s\n", usd(totalAmount(data))));
+        result.append(String.format("적립 포인트: %d점\n", totalVolumeCredits(data)));
         return result.toString();
     }
 
-    private int totalAmount(List<Performance> performances) {
-        int result = 0;
-        for (Performance performance : performances) {
-            result += performance.getAmount();
-        }
-        return result;
+    private int totalAmount(StatementData data) {
+        return data.getPerformances().stream()
+                .mapToInt(Performance::getAmount)
+                .sum();
     }
 
-    private int totalVolumeCredits(List<Performance> performances) {
-        int result = 0;
-        for (Performance performance : performances) {
-            result += performance.getVolumeCredits();
-        }
-        return result;
+    private int totalVolumeCredits(StatementData data) {
+        return data.getPerformances().stream()
+                .mapToInt(Performance::getVolumeCredits)
+                .sum();
     }
 
     private String usd(int number) {

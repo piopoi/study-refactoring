@@ -7,6 +7,7 @@ public class Performance {
     private Play play;
     private int amount;
     private int volumeCredits;
+    private int totalVolumeCredits;
 
     public Performance(String playId, int audience) {
         this.playId = playId;
@@ -43,5 +44,13 @@ public class Performance {
 
     public void setVolumeCredits(int volumeCredits) {
         this.volumeCredits = volumeCredits;
+    }
+
+    public int getTotalVolumeCredits() {
+        return totalVolumeCredits;
+    }
+
+    public void setTotalVolumeCredits(int totalVolumeCredits) {
+        this.totalVolumeCredits = totalVolumeCredits;
     }
 }
