@@ -69,7 +69,7 @@ public class InvoiceGenerator {
     }
 
     private Performance enrichPerformance(Performance performance, Map<String, Play> plays) {
-        PerformanceCalculator calculator = createPerformanceCalculator(performance, plays);
+        PerformanceCalculator calculator = createPerformanceCalculator(performance, playFor(plays, performance));
         Performance result = new Performance(performance.getPlayId(), performance.getAudience());
         result.setPlay(calculator.getPlay());
         result.setAmount(calculator.amount());
@@ -77,8 +77,12 @@ public class InvoiceGenerator {
         return result;
     }
 
-    private PerformanceCalculator createPerformanceCalculator(Performance performance, Map<String, Play> plays) {
-        return new PerformanceCalculator(performance, playFor(plays, performance));
+    private PerformanceCalculator createPerformanceCalculator(Performance performance, Play play) {
+        return switch (play.type()) {
+            case TRAGEDY -> new TragedyCalculator(performance, play);
+            case COMEDY -> new ComedyCalculator(performance, play);
+            default -> throw new IllegalArgumentException("알 수 없는 장르: " + play.type().name());
+        };
     }
 
     private int totalVolumeCredits(StatementData data) {
