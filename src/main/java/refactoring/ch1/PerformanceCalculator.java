@@ -17,12 +17,7 @@ public abstract class PerformanceCalculator {
     }
 
     public int volumeCredits() {
-        int result = 0;
-        result += Math.max(performance.getAudience() - 30, 0);
-        if (COMEDY == this.play.type()) {
-            result += (int) Math.floor(performance.getAudience() / 5.0);
-        }
-        return result;
+        return Math.max(performance.getAudience() - 30, 0);
     }
 
     public Performance getPerformance() {
