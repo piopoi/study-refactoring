@@ -5,3 +5,5 @@
 [Chapter 01](src/main/java/refactoring/ch1/ch1.md)  
 [Chapter 02](src/main/java/refactoring/ch2/ch2.md)  
 [Chapter 03](src/main/java/refactoring/ch3/ch3.md)  
+[Chapter 04](src/main/java/refactoring/ch4/ch4.md)  
+[Chapter 05](src/main/java/refactoring/ch5/ch5.md)  
