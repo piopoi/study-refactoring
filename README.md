@@ -1,4 +1,4 @@
-# 책 스터디: 리팩터링(2판) - 마틴 파울러 
+# 책 스터디: 리팩터링(2판) - 마틴 파울러
 
 ## 챕터 별 정리
 
@@ -10,3 +10,4 @@
 [Chapter 06](src/main/java/refactoring/ch6/ch6.md)  
 [Chapter 07](src/main/java/refactoring/ch7/ch7.md)  
 [Chapter 08](src/main/java/refactoring/ch8/ch8.md)  
+[Chapter 09](src/main/java/refactoring/ch9/ch9.md)
