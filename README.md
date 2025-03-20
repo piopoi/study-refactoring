@@ -8,3 +8,5 @@
 [Chapter 04](src/main/java/refactoring/ch4/ch4.md)  
 [Chapter 05](src/main/java/refactoring/ch5/ch5.md)  
 [Chapter 06](src/main/java/refactoring/ch6/ch6.md)  
+[Chapter 07](src/main/java/refactoring/ch7/ch7.md)  
+[Chapter 08](src/main/java/refactoring/ch8/ch8.md)  
