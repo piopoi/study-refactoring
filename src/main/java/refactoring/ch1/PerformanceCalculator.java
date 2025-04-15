@@ -1,7 +1,5 @@
 package refactoring.ch1;
 
-import static refactoring.ch1.PlayType.COMEDY;
-
 public abstract class PerformanceCalculator {
 
     private Performance performance;
